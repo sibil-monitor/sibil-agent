@@ -13,14 +13,29 @@ FILE=sibil-linux-amd64
 grep -q "  ${FILE}\$" checksums.txt && sha256sum -c <(grep "  ${FILE}\$" checksums.txt)
 ```
 
-We're moving towards GitHub artifact attestations (provenance: which commit
-in this public repo produced this exact binary) — track progress in
-[releases](https://github.com/sibil-monitor/sibil-agent/releases). Once
-live, verify with:
+## Provenance attestations (optional, advanced)
+
+Starting with `v1.4.1`, every release is built by GitHub Actions directly
+from this repo's source (`.github/workflows/release.yml`) and the resulting
+`checksums.txt` is attested — no binary is ever built or uploaded by hand.
+If you have `gh` ≥ 2.49:
 
 ```bash
-gh attestation verify sibil-linux-amd64 --owner sibil-monitor
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/sibil-linux-amd64
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/checksums.txt
+
+grep -q "  sibil-linux-amd64\$" checksums.txt && sha256sum -c <(grep "  sibil-linux-amd64\$" checksums.txt)
+
+gh attestation verify ./sibil-linux-amd64 --repo sibil-monitor/sibil-agent
 ```
+
+`gh attestation verify` checks a cryptographically signed statement (Sigstore)
+tying the exact binary digest to: this repository, the `release.yml`
+workflow, the commit it ran from, and the tag that triggered it. It does
+**not** mean the binary is "secure" or free of bugs — it means you can
+verify *where it came from and how it was built*, and decide for yourself
+whether that's enough. The checksum step above remains the baseline; this
+is an additional, optional layer on top of it.
 
 ## Cryptographic trust model
 
