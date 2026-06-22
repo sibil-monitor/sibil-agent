@@ -66,15 +66,22 @@ if ! curl -fsSL "$CHECKSUMS_URL" -o "$TMPCHK"; then
   exit 1
 fi
 
-EXPECTED=$(grep "$FILENAME" "$TMPCHK" | awk '{print $1}')
+# Anchored match: proves checksums.txt actually covers THIS exact filename,
+# not just that some line happens to contain the substring.
+if ! grep -q "  ${FILENAME}\$" "$TMPCHK"; then
+  echo "No checksum entry for ${FILENAME} in checksums.txt — aborting."
+  exit 1
+fi
+
+EXPECTED=$(grep "  ${FILENAME}\$" "$TMPCHK" | awk '{print $1}')
 ACTUAL=$(sha256sum "$TMP" | awk '{print $1}')
-if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$ACTUAL" ]; then
-  echo "Checksum mismatch or missing entry — aborting."
-  echo "  Expected : ${EXPECTED:-<not found in checksums.txt>}"
+if [ "$EXPECTED" != "$ACTUAL" ]; then
+  echo "Checksum mismatch — aborting."
+  echo "  Expected : $EXPECTED"
   echo "  Got      : $ACTUAL"
   exit 1
 fi
-echo "  - Checksum verified"
+echo "  - Checksum verified for ${FILENAME}"
 
 # ── Install ────────────────────────────────────────────────────────────────────
 if [ -w "$INSTALL_DIR" ]; then

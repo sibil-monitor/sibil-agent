@@ -3,10 +3,14 @@
 ## Verifying what you run
 
 Every release ships `checksums.txt` alongside the binaries. Verify before
-running anything, every time, including updates:
+running anything, every time, including updates — and verify that
+`checksums.txt` actually covers the exact file you downloaded, rather than
+trusting `--ignore-missing` to tell you that on its own (it stays silent,
+exit 0, if your file simply isn't listed):
 
 ```bash
-sha256sum -c checksums.txt --ignore-missing
+FILE=sibil-linux-amd64
+grep -q "  ${FILE}\$" checksums.txt && sha256sum -c <(grep "  ${FILE}\$" checksums.txt)
 ```
 
 We're moving towards GitHub artifact attestations (provenance: which commit

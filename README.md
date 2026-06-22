@@ -17,7 +17,10 @@ Download, verify, run. Nothing is installed by this first step.
 ```bash
 curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.0/sibil-linux-amd64
 curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.0/checksums.txt
-sha256sum -c checksums.txt --ignore-missing
+
+# Anchored check: proves checksums.txt actually covers this exact file,
+# not just that the file exists and `--ignore-missing` silently let it pass.
+grep -q "  sibil-linux-amd64\$" checksums.txt && sha256sum -c <(grep "  sibil-linux-amd64\$" checksums.txt)
 
 chmod +x ./sibil-linux-amd64
 ./sibil-linux-amd64 preflight
