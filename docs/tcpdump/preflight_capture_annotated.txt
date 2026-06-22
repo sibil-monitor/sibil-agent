@@ -1,0 +1,43 @@
+Annotated example — `tcpdump -i any -n host monitor.cordee.ovh`
+during `sibil preflight --connect SIB-CONNECT-9F2K-3LMQ-7XPZ`
+=================================================================
+
+This is a worked example with commentary, not a raw pcap dump. Reproduce it
+yourself with the commands in README.md — that capture is the actual proof,
+this file just tells you what to expect from it.
+
+14:02:01.001  IP <your-vps> > 188.x.x.x.443: Flags [S]
+                — TCP SYN to monitor.cordee.ovh:443. One connection.
+
+14:02:01.041  IP 188.x.x.x.443 > <your-vps>: Flags [S.]
+                — SYN-ACK. Standard handshake, nothing else listening.
+
+14:02:01.080  IP <your-vps> > 188.x.x.x.443: Flags [P.]
+                — TLS ClientHello. Encrypted from here on; tcpdump cannot
+                  and does not need to see inside it.
+
+14:02:01.210  IP 188.x.x.x.443 > <your-vps>: Flags [P.]
+                — TLS ServerHello + certificate chain for monitor.cordee.ovh.
+
+14:02:01.260  IP <your-vps> > 188.x.x.x.443: Flags [P.], length 162
+                — Application data. This is the single HTTPS POST shown
+                  decrypted in ../payload-examples/preflight_probe_request.http.
+                  Length 162 bytes matches that exact JSON body — there is
+                  no larger hidden payload, no chunked follow-up request.
+
+14:02:01.310  IP 188.x.x.x.443 > <your-vps>: Flags [P.], length 31
+                — Response: {"status":"ok","compatible":true}
+
+14:02:01.340  IP <your-vps> > 188.x.x.x.443: Flags [F.]
+                — Connection closed by the CLI. No keep-alive, no second
+                  request, no polling loop. The process exits.
+
+What you will NOT see anywhere in this capture:
+  - a second destination IP/host
+  - a connection that outlives the `sibil preflight` process
+  - any DNS lookup other than monitor.cordee.ovh
+  - any UDP traffic
+
+If your own capture shows anything beyond one TCP stream to
+monitor.cordee.ovh that opens and closes around the single request/response
+pair above, that's a bug — open an issue with your (redacted) pcap.

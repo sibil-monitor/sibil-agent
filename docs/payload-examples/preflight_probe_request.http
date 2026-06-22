@@ -1,0 +1,42 @@
+Example — `sibil preflight --connect SIB-CONNECT-XXXX-XXXX-XXXX`
+================================================================
+
+This is the exact, only outbound request the ephemeral preflight probe sends.
+It is generated from `cmd/preflight.go::sendPreflightProbe`. No service names,
+process list, ports, logs, or file paths are ever included.
+
+POST /api/v1/preflight/probe HTTP/1.1
+Host: monitor.cordee.ovh
+Content-Type: application/json
+Content-Length: 162
+
+{
+  "connect_code": "SIB-CONNECT-9F2K-3LMQ-7XPZ",
+  "os": "linux",
+  "arch": "amd64",
+  "can_run": true,
+  "tunnel_reachable": true,
+  "pm2_detected": true,
+  "systemd_detected": true,
+  "docker_detected": "not_detected",
+  "persistent_install": false
+}
+
+Response (200):
+
+{
+  "status": "ok",
+  "compatible": true
+}
+
+What this payload can never contain (enforced by the code, not by policy):
+  - process names or PM2 app list
+  - listening ports
+  - log lines or log file paths
+  - filesystem paths
+  - environment variables
+  - infrastructure inventory of any kind
+
+`sibil preflight` without `--connect` sends nothing at all — it only opens a
+plain GET to `/health` to check that the relay is reachable, and prints a
+local report. No code path persists this probe to disk.

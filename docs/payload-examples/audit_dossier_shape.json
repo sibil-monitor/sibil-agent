@@ -1,0 +1,43 @@
+{
+  "_comment": "Top-level shape of `sibil audit`. This file is written to disk on the client's machine (audit.json + audit.md + redaction_report.json). It is NEVER sent over the network by this CLI — there is no upload code path. Field names match cmd/audit.go.",
+  "generated_at": "2026-06-22T12:00:00Z",
+  "cli_version": "1.4.0",
+  "safe_mode": true,
+  "system": {
+    "_comment": "OS, kernel, uptime, CPU, load, RAM, disk — see collect/audit_system.go"
+  },
+  "services": {
+    "pm2": [
+      {
+        "service": "redacted-host-app-1",
+        "managed_by": "pm2",
+        "stack_guess": "node",
+        "logs_accessible": true,
+        "recent_restarts": 0,
+        "has_health_endpoint": "unknown",
+        "observability_score": 0.6,
+        "gaps": ["no structured logging detected"]
+      }
+    ],
+    "systemd": [],
+    "docker": { "_comment": "opt-in via --include-docker, empty by default" }
+  },
+  "network": {
+    "status": "ok",
+    "listeners": [
+      { "_comment": "classified local/public/private via ss -tlnp; ports 22/80/443 excluded from risk_hints" }
+    ]
+  },
+  "observability": [
+    { "_comment": "one entry per detected service, score 0-1, gaps array" }
+  ],
+  "risk_hints": [
+    {
+      "level": "medium",
+      "title": "example hint only",
+      "evidence": "signal, not a verdict",
+      "confidence": 0.5,
+      "requires_human_review": true
+    }
+  ]
+}
