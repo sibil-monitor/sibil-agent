@@ -15,8 +15,8 @@ What's closed source and why: see [ARCHITECTURE.md](ARCHITECTURE.md#whats-not-in
 Download, verify, run. Nothing is installed by this first step.
 
 ```bash
-curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.0/sibil-linux-amd64
-curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.0/checksums.txt
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/sibil-linux-amd64
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/checksums.txt
 
 # Anchored check: proves checksums.txt actually covers this exact file,
 # not just that the file exists and `--ignore-missing` silently let it pass.
@@ -30,6 +30,22 @@ chmod +x ./sibil-linux-amd64
 and outbound reachability, prints a compatibility report, and creates no
 files. See [DATA_FLOW.md](DATA_FLOW.md) for exactly what it does and does
 not send.
+
+### Optional — verify provenance, not just integrity
+
+Checksum verification proves the file wasn't corrupted or swapped in transit.
+It doesn't prove *who built it*. Starting with `v1.4.1`, every release is
+built and attested by GitHub Actions directly from this repo's source —
+nobody uploads a binary by hand. If you have the
+[GitHub CLI](https://cli.github.com/) (`gh` ≥ 2.49):
+
+```bash
+gh attestation verify ./sibil-linux-amd64 --repo sibil-monitor/sibil-agent
+```
+
+This is an additional, optional layer — the checksum step above is still
+the baseline every install should do. See [SECURITY.md](SECURITY.md) for
+what the attestation does and doesn't prove.
 
 Once you're satisfied, install it:
 
