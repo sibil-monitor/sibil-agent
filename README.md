@@ -15,8 +15,8 @@ What's closed source and why: see [ARCHITECTURE.md](ARCHITECTURE.md#whats-not-in
 Download, verify, run. Nothing is installed by this first step.
 
 ```bash
-curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/sibil-linux-amd64
-curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/checksums.txt
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.2/sibil-linux-amd64
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.2/checksums.txt
 
 # Anchored check: proves checksums.txt actually covers this exact file,
 # not just that the file exists and `--ignore-missing` silently let it pass.
@@ -78,8 +78,9 @@ curl -fsSL https://monitor.cordee.ovh/bootstrap | sh
 
 This runs `sibil preflight` in a temp dir and deletes everything on exit.
 Convenient for a first look, not how we'd install on a server we care about.
-(`monitor.cordee.ovh` is migrating to `sibil.sh` — this command will move
-with it; the old domain will keep working during the transition.)
+`sibil.sh` is the public product and trust surface. `monitor.cordee.ovh`
+remains the operational API and relay used by the current agent; it is not
+presented as the public product identity.
 
 ## Commands
 
@@ -116,7 +117,11 @@ go build -o sibil .
 go test ./...
 ```
 
-Go 1.22+, no CGO, no external runtime dependencies.
+Go 1.25.13+, no CGO, no external runtime dependencies.
+
+Release `v1.4.2` is a security rebuild of the public agent with patched Go,
+WebSocket and networking dependencies. It does not broaden collection,
+authority or outbound data flow.
 
 ## License
 

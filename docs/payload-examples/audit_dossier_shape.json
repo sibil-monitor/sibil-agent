@@ -1,7 +1,7 @@
 {
   "_comment": "Top-level shape of `sibil audit`. This file is written to disk on the client's machine (audit.json + audit.md + redaction_report.json). It is NEVER sent over the network by this CLI — there is no upload code path. Field names match cmd/audit.go.",
   "generated_at": "2026-06-22T12:00:00Z",
-  "cli_version": "1.4.0",
+  "cli_version": "1.4.2",
   "safe_mode": true,
   "system": {
     "_comment": "OS, kernel, uptime, CPU, load, RAM, disk — see collect/audit_system.go"

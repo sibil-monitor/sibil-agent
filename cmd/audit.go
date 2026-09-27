@@ -77,7 +77,7 @@ type redactionReport struct {
 
 // ── Command ───────────────────────────────────────────────────────────────────
 
-const auditCLIVersion = "1.4.0"
+const auditCLIVersion = "1.4.2"
 
 var auditCmd = &cobra.Command{
 	Use:   "audit",

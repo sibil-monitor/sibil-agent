@@ -21,8 +21,8 @@ from this repo's source (`.github/workflows/release.yml`) and the resulting
 If you have `gh` ≥ 2.49:
 
 ```bash
-curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/sibil-linux-amd64
-curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.1/checksums.txt
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.2/sibil-linux-amd64
+curl -LO https://github.com/sibil-monitor/sibil-agent/releases/download/v1.4.2/checksums.txt
 
 grep -q "  sibil-linux-amd64\$" checksums.txt && sha256sum -c <(grep "  sibil-linux-amd64\$" checksums.txt)
 
@@ -36,6 +36,9 @@ workflow, the commit it ran from, and the tag that triggered it. It does
 verify *where it came from and how it was built*, and decide for yourself
 whether that's enough. The checksum step above remains the baseline; this
 is an additional, optional layer on top of it.
+
+Release `v1.4.2` and later are built with Go `1.25.13` or newer and are
+scanned with `govulncheck` at both source and binary level before publication.
 
 ## Cryptographic trust model
 
