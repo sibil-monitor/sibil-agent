@@ -8,7 +8,7 @@ import (
 	"github.com/sibil-monitor/sibil-agent/config"
 )
 
-const cliVersion = "1.4.0"
+const cliVersion = "1.4.2"
 
 func Run(cfg *config.Config) error {
 	mux := http.NewServeMux()

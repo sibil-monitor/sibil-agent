@@ -19,7 +19,12 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.25.13"
+
+      - name: Audit source before release
+        env:
+          GOTOOLCHAIN: go1.25.13
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
 
       - name: Build static binaries
         run: |
@@ -28,6 +33,13 @@ jobs:
 
       - name: Generate checksums
         run: sha256sum sibil-linux-amd64 sibil-linux-arm64 install.sh > checksums.txt
+
+      - name: Audit release binaries
+        env:
+          GOTOOLCHAIN: go1.25.13
+        run: |
+          go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 -mode=binary ./sibil-linux-amd64
+          go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 -mode=binary ./sibil-linux-arm64
 
       # Only on an actual tag push: attest + publish. workflow_dispatch runs
       # build+checksum only, as a dry run, so we can validate the pipeline

@@ -31,7 +31,7 @@ touches your filesystem, your process list, or your network listeners.
 | Component | Why it's closed |
 |---|---|
 | Dashboard / mobile app UI | Product surface, not infrastructure access |
-| Billing / Stripe integration | Payment processing, no local data involved |
+| Billing / Stripe, Google Play and RevenueCat integration | Payment processing, no local infrastructure data involved |
 | Backend (auth, subscription, entitlement **signing**) | Holds private keys and customer data; this repo only ever holds the matching **public** key to verify, never to sign |
 | Audit/report generation (human side) | `sibil audit` collects facts locally (see `cmd/audit.go`); turning facts into a prioritized report is a paid human service, not a CLI feature |
 | Admin tooling | Internal operations surface |
